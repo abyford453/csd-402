@@ -1,168 +1,101 @@
 
 /*
- * Student: Drew Byford
- * Course: CSD-402 Java for Programmers
- * Assignment: Module 2 - Rock Paper Scissors
- * Date: October 30, 2026
+ * Drew Byford
+ * CSD-402 Java for Programmers
+ * Module 2 - Rock Paper Scissors
+ * 10/30/2026
  *
- * Description:
- * This program allows a user to play Rock-Paper-Scissors
- * against the computer. The computer randomly generates
- * a number between 1 and 3.
- *
- * The program validates user input and allows the user
- * to retry invalid entries without restarting.
- *
- * 1 = Rock
- * 2 = Paper
- * 3 = Scissors
+ * Thisprogram plays Rock Paper Scissors against the computer.
+ * The computer randomly picks 1, 2, or 3 and the user
+ * enters their choice. The program determines the winner.
  */
 
-import java.util.Random;
 import java.util.Scanner;
+import java.util.Random;
 
 public class ByfordRockPaperScissors {
 
     public static void main(String[] args) {
 
+        Scanner input = new Scanner(System.in);
         Random random = new Random();
 
-        try (Scanner input = new Scanner(System.in)) {
+        String[] choices = {"Rock", "Paper", "Scissors"};
+        boolean playing = true;
 
-            System.out.println("================================");
-            System.out.println("       ROCK PAPER SCISSORS      ");
-            System.out.println("================================");
+        System.out.println("Welcome to Rock Paper Scissors!");
 
-            boolean playAgain = true;
+        while (playing) {
 
-            while (playAgain) {
+            System.out.println("\n1. Rock");
+            System.out.println("2. Paper");
+            System.out.println("3. Scissors");
 
-                System.out.println();
-                System.out.println("1 - Rock");
-                System.out.println("2 - Paper");
-                System.out.println("3 - Scissors");
-                System.out.println("Q - Quit");
-                System.out.println();
+            int player = 0;
 
-                int playerChoice = 0;
+            // Keep asking until the user enters a valid choice.
+            while (player < 1 || player > 3) {
 
-                // Continue prompting until valid input is received.
-                while (playerChoice == 0) {
+                System.out.print("\nChoose 1, 2, or 3: ");
 
-                    System.out.print(
-                        "Enter your choice (1, 2, 3, or Q): "
-                    );
-
-                    // Handle end-of-input without throwing an exception.
-                    if (!input.hasNextLine()) {
-                        System.out.println(
-                            "\nInput closed. Exiting game."
-                        );
-                        return;
-                    }
-
-                    String userInput = input.nextLine().trim();
-
-                    // Allow the user to exit at any time.
-                    if (userInput.equalsIgnoreCase("Q")) {
-                        System.out.println(
-                            "Thanks for playing!"
-                        );
-                        return;
-                    }
-
-                    // Reject empty input.
-                    if (userInput.isEmpty()) {
-                        System.out.println(
-                            "Error: Input cannot be empty."
-                        );
-                        continue;
-                    }
-
-                    // Accept only the exact values 1, 2, or 3.
-                    if (!userInput.matches("[123]")) {
-                        System.out.println(
-                            "Error: Invalid selection. " +
-                            "Please enter 1, 2, 3, or Q."
-                        );
-                        continue;
-                    }
-
-                    playerChoice = Integer.parseInt(userInput);
+                if (!input.hasNextLine()) {
+                    System.out.println("\nInput ended. Goodbye!");
+                    input.close();
+                    return;
                 }
 
-                // Generate the computer's selection.
-                int computerChoice = random.nextInt(3) + 1;
+                String answer = input.nextLine().trim();
 
-                String[] choices = {
-                    "Rock", "Paper", "Scissors"
-                };
+                if (answer.equals("1") ||
+                    answer.equals("2") ||
+                    answer.equals("3")) {
 
-                String playerName = choices[playerChoice - 1];
-                String computerName = choices[computerChoice - 1];
-
-                System.out.println();
-                System.out.println("========== RESULTS ==========");
-                System.out.println("Your selection: " + playerName);
-                System.out.println(
-                    "Computer selection: " + computerName
-                );
-
-                // Compare selections to determine the winner.
-                if (playerChoice == computerChoice) {
-
-                    System.out.println("Result: It's a tie!");
-
-                } else if (
-                    (playerChoice == 1 && computerChoice == 3) ||
-                    (playerChoice == 2 && computerChoice == 1) ||
-                    (playerChoice == 3 && computerChoice == 2)
-                ) {
-
-                    System.out.println("Result: You win!");
+                    player = Integer.parseInt(answer);
 
                 } else {
+                    System.out.println("Invalid choice. Try again.");
+                }
+            }
 
-                    System.out.println("Result: Computer wins!");
+            int computer = random.nextInt(3) + 1;
 
+            System.out.println("\nYou picked: " + choices[player - 1]);
+            System.out.println("Computer picked: " + choices[computer - 1]);
+
+            if (player == computer) {
+                System.out.println("It's a tie!");
+            } else if ((player == 1 && computer == 3) ||
+                       (player == 2 && computer == 1) ||
+                       (player == 3 && computer == 2)) {
+                System.out.println("You win!");
+            } else {
+                System.out.println("Computer wins!");
+            }
+
+            // Ask if the user wants another round.
+            while (true) {
+                System.out.print("\nPlay again? (Y/N): ");
+
+                if (!input.hasNextLine()) {
+                    System.out.println("\nInput ended. Goodbye!");
+                    input.close();
+                    return;
                 }
 
-                System.out.println("=============================");
-                System.out.println();
+                String again = input.nextLine().trim();
 
-                // Validate whether the player wants another round.
-                while (true) {
-
-                    System.out.print(
-                        "Would you like to play again? (Y/N): "
-                    );
-
-                    if (!input.hasNextLine()) {
-                        System.out.println(
-                            "\nInput closed. Exiting game."
-                        );
-                        return;
-                    }
-
-                    String answer = input.nextLine().trim();
-
-                    if (answer.equalsIgnoreCase("Y")) {
-                        break;
-                    }
-
-                    if (answer.equalsIgnoreCase("N")) {
-                        playAgain = false;
-                        System.out.println(
-                            "Thanks for playing!"
-                        );
-                        break;
-                    }
-
-                    System.out.println(
-                        "Error: Please enter Y for Yes or N for No."
-                    );
+                if (again.equalsIgnoreCase("Y")) {
+                    break;
+                } else if (again.equalsIgnoreCase("N")) {
+                    playing = false;
+                    break;
+                } else {
+                    System.out.println("Please enter Y or N.");
                 }
             }
         }
+
+        System.out.println("\nThanks for playing!");
+        input.close();
     }
 }
